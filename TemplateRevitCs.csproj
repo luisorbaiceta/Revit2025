@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <NoWarn>$(NoWarn);MSB3277</NoWarn>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <OutputType>Library</OutputType>
+    <RootNamespace>$safeprojectname$</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <AssemblyName>$safeprojectname$</AssemblyName>
+    <AssemblyTitle>$safeprojectname$</AssemblyTitle>
+    <Description>Revit Add-In Description for $safeprojectname$</Description>
+    <Company>Orbaiceta y Aldaba Arquitectos, S.L.P.</Company>
+    <Product>$safeprojectname$ Revit C# .NET Add-In</Product>
+    <Copyright>Copyright (C) 2025 by Orbaiceta y Aldaba Arquitectos, S.L.P.</Copyright>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <FileVersion>1.0.0</FileVersion>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <WarningLevel>4</WarningLevel>
+    <StartAction>Program</StartAction>
+    <StartProgram>$(ProgramW6432)\Autodesk\Revit 2025\Revit.exe</StartProgram>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <StartAction>Program</StartAction>
+    <StartProgram>$(ProgramW6432)\Autodesk\Revit 2025\Revit.exe</StartProgram>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="RevitAPI">
+      <HintPath>$(ProgramW6432)\Autodesk\Revit 2025\RevitAPI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="RevitAPIUI">
+      <HintPath>$(ProgramW6432)\Autodesk\Revit 2025\RevitAPIUI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="App.cs" />
+    <Content Include="Command.cs" />
+    <Content Include="$projectname$.addin" />
+  </ItemGroup>
+
+  <Target Name="CopyAddinFiles" AfterTargets="Build">
+    <ItemGroup>
+      <AddinFiles Include="$(ProjectDir)*.addin" />
+      <DllFiles Include="$(OutputPath)*.dll" />
+    </ItemGroup>
+    <PropertyGroup>
+      <AddinDir Condition="Exists('$(AppData)\Autodesk\Revit\Addins\2025')">$(AppData)\Autodesk\Revit\Addins\2025</AddinDir>
+    </PropertyGroup>
+    <Copy SourceFiles="@(AddinFiles)" DestinationFolder="$(AddinDir)" Condition="Exists('$(AddinDir)')" />
+    <Copy SourceFiles="@(DllFiles)" DestinationFolder="$(AddinDir)" Condition="Exists('$(AddinDir)')" />
+  </Target>
+
+  <Target Name="AfterClean">
+    <Delete Files="$(AppData)\Autodesk\REVIT\Addins\2025\$projectname$.addin" />
+    <Delete Files="$(AppData)\Autodesk\REVIT\Addins\2025\$projectname$.dll" />
+  </Target>
+
+</Project>
